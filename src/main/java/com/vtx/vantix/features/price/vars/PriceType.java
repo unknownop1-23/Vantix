@@ -1,0 +1,9 @@
+package com.vtx.vantix.features.price.vars;
+
+public enum PriceType {
+
+    BAZAAR,
+    BZ_WITH_OFFER,
+    BIN,
+    AUCTION
+}

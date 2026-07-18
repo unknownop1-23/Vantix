@@ -1,0 +1,24 @@
+package com.vtx.vantix.features.chat.chatfilters.listener;
+
+import com.vtx.vantix.core.VNTXConfig;
+import com.vtx.vantix.features.chat.chatfilters.ChatFilterManager;
+import com.vtx.vantix.init.RegisterEvents;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+@RegisterEvents
+public class ChatFilterListener {
+
+    @SubscribeEvent
+    public void onChatRecieved(ClientChatReceivedEvent event) {
+        if(!VNTXConfig.feature.chat.chatFilterConfig.chatFilters) return;
+        IChatComponent result = ChatFilterManager.applyFilters(event.message);
+        if (result == null || result.getUnformattedText().isEmpty()) {
+            event.setCanceled(true);
+        } else {
+            event.message = result;
+        }
+    }
+
+}

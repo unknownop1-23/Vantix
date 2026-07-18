@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "${modid}",
+    "name": "Vantix",
+    "description": "A Quality-Of-Life mod for Fakepixel Skyblock, Formerly known as JEF.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/aetheria-org/Aetheria",
+    "updateUrl": "",
+    "authorList": ["hamlock"],
+    "credits": "Internet Protocol, Whispering & Mxhooman.",
+    "logoFile": "assets/vantix/logo.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

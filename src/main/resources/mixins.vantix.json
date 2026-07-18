@@ -1,0 +1,7 @@
+{
+  "package": "com.vtx.vantix.mixins",
+  "plugin": "com.vtx.vantix.init.AutoDiscoveryMixinPlugin",
+  "refmap": "mixins.${modid}.refmap.json",
+  "minVersion": "0.7",
+  "compatibilityLevel": "JAVA_8"
+}

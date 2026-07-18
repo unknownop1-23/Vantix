@@ -1,0 +1,34 @@
+package com.vtx.vantix.mixins;
+
+import com.vtx.vantix.features.qol.BetterContainers;
+import com.vtx.vantix.utils.ContainerUtils;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(GuiContainer.class)
+public class MixinGuiContainer_BetterContainers {
+
+    @Inject(method = "onGuiClosed", at = @At("HEAD"))
+    private void VNTX$onGuiClosed(CallbackInfo ci) {
+        if (ContainerUtils.isChestOpen((GuiContainer) (Object) this)) {
+            BetterContainers.getInstance().reset();
+        }
+    }
+    @Inject(method = "drawSlot", at = @At("HEAD"), cancellable = true)
+    private void VNTX$cancelBlankPaneRender(Slot slot, CallbackInfo ci) {
+        if (slot == null) return;
+
+        ItemStack stack = slot.getStack();
+
+        if (BetterContainers.isEnabled()
+                && BetterContainers.getInstance().isLoaded()
+                && !BetterContainers.shouldRenderStack(slot.slotNumber, stack)) {
+            ci.cancel();
+        }
+    }
+}
