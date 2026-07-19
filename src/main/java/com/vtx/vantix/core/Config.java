@@ -1,6 +1,7 @@
 package com.vtx.vantix.core;
 
 import com.google.gson.annotations.Expose;
+import com.vtx.vantix.core.features.Chocolate.ChocolateFactoryConfig;
 import com.vtx.vantix.core.moulconfig.gui.config.ConfigAnnotations.Category;
 import com.vtx.vantix.core.features.about.About;
 import com.vtx.vantix.core.features.chat.ChatConfig;
@@ -32,6 +33,10 @@ public class Config {
     @Expose
     @Category(name = "Quality of life", desc = "QOL features")
     public final Qol qol = new Qol();
+
+    @Expose
+    @Category(name = "Chocolate Factory", desc = "Settings for the Hoppity Chocolate Factory.")
+    public ChocolateFactoryConfig chocolateFactory = new ChocolateFactoryConfig();
 
     @Expose
     @Category(name = "Scoreboard", desc = "Custom scoreboard panel")

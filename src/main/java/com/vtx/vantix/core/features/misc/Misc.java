@@ -112,4 +112,7 @@ public class Misc {
     @Expose
     @Category(name = "Ghost Tracker", desc = "Settings for Ghost Tracker overlay")
     public GhostTrackerConfig ghostTrackerConfig = new GhostTrackerConfig();
+
+    @Category(name = "Accessories", desc = "Settings for the Accessory Bag.")
+    public AccessoriesConfig accessories = new AccessoriesConfig();
 }

@@ -9,7 +9,6 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class ChatUtils {
 
     public static final Pattern PLAYER_MSG_STRIPPED = Pattern.compile("^(?:\\[\\d+\\]\\s*)?" + "(?:\\S\\s+)?" + "(?:\\[[^\\]]*\\]\\s*)?" + "(\\w{1,16})" + "[^\\w:]*" + ":\\s*" + "(.+)$");
@@ -19,6 +18,9 @@ public class ChatUtils {
     private static final Pattern MSG_SENT = Pattern.compile("^§.From Me §.to (?:§.\\[[^\\]]*\\] )?§.(\\w{1,16})§.: §.(.+)§r$");
     private static final Pattern MSG_RECEIVED_STRIPPED = Pattern.compile("^From (?:\\[[^\\]]*\\] )?(\\w{1,16}) to Me: (.+)$");
     private static final Pattern MSG_SENT_STRIPPED = Pattern.compile("^From Me to (?:\\[[^\\]]*\\] )?(\\w{1,16}): (.+)$");
+
+    // Ported from NotEnoughFakepixel
+    public static final Pattern middleBar = Pattern.compile("(§6|§c)[0-9]+/[0-9]+❤(.)+");
 
     private ChatUtils() {
     }
@@ -113,6 +115,11 @@ public class ChatUtils {
         if (mc.thePlayer != null) {
             mc.thePlayer.addChatMessage(new ChatComponentText(message));
         }
+    }
+
+    // Ported from NotEnoughFakepixel for compatibility with ported features
+    public static void notifyChat(String message) {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
     }
 
     public static void sendMultilineMessage(String message) {

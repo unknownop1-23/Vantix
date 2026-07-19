@@ -56,8 +56,6 @@ public class Dungeons {
     @ConfigEditorBoolean
     public boolean hideBlessingMessages = false;
 
-
-
     @Expose
     public java.util.Map<String, Long> floorPbs = new java.util.HashMap<>();
 

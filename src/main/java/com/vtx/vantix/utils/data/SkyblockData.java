@@ -1,5 +1,8 @@
 package com.vtx.vantix.utils.data;
 
+import com.vtx.vantix.variables.*; // For Gamemode, Area, DungeonFloor, Slayer
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -14,8 +17,57 @@ import java.util.stream.IntStream;
 
 public final class SkyblockData {
 
-    private SkyblockData() {
+    private SkyblockData() {}
+
+    // ==========================================
+    // STATE TRACKING & VARIABLES
+    // ==========================================
+
+    // Profile data
+    @Getter @Setter private static String currentProfile = null; //todo: implement profile detection
+
+    // Slayer/Boss data
+    @Getter @Setter private static boolean isSlayerActive = false;
+    @Getter @Setter private static boolean isBossActive = false;
+    @Getter private static Slayer currentSlayer = Slayer.NONE;
+
+    public static void setCurrentSlayer(Slayer newSlayer) {
+        if (currentSlayer == newSlayer) return;
+        currentSlayer = newSlayer;
+        resetSlayerData();
     }
+
+    @Getter @Setter private static int slayerLevel = 0;
+    @Getter @Setter private static int slayerXp = 0;
+    @Getter @Setter private static int nextLevelXp = 0;
+    @Getter @Setter private static int xpToNextLevel = 0;
+    @Getter @Setter private static int sessionBosses = 0;
+    @Getter @Setter private static float RNGesusMeter = 0;
+    @Getter @Setter private static double totalSeconds = 0;
+
+    // Location data
+    @Getter @Setter private static Location currentLocation = Location.NONE;
+    @Getter @Setter private static Gamemode currentGamemode = Gamemode.LOBBY;
+    @Getter @Setter private static Area currentArea = Area.NONE;
+
+    // Time data
+    @Getter @Setter private static int sbHour = 0;
+    @Getter @Setter private static int sbMinute = 0;
+    @Getter @Setter private static boolean am = false;
+    @Getter @Setter private static Season season = Season.SPRING;
+
+    // Mining data
+    @Getter @Setter private static int mithrilPowder = 0;
+    @Getter @Setter private static int gemstonePowder = 0;
+    @Getter @Setter private static int heat = 0;
+
+    // Dungeon data
+    @Getter @Setter private static DungeonFloor currentFloor = DungeonFloor.NONE;
+    @Getter @Setter private static int clearedPercentage = -1;
+
+    // ==========================================
+    // SCOREBOARD & PARSING UTILITIES
+    // ==========================================
 
     public static String getServerId() {
         Minecraft mc = Minecraft.getMinecraft();
@@ -53,7 +105,9 @@ public final class SkyblockData {
 
         List<Score> scores;
         try {
-            scores = scoreboard.getSortedScores(objective).stream().filter(s -> s != null && s.getPlayerName() != null && !s.getPlayerName().startsWith("#")).collect(Collectors.toList());
+            scores = scoreboard.getSortedScores(objective).stream()
+                    .filter(s -> s != null && s.getPlayerName() != null && !s.getPlayerName().startsWith("#"))
+                    .collect(Collectors.toList());
         } catch (ConcurrentModificationException e) {
             return Collections.emptyList();
         }
@@ -67,11 +121,17 @@ public final class SkyblockData {
     }
 
     public static List<String> getCleanScoreboardLines() {
-        return getScoreboardLines().stream().map(s -> net.minecraft.util.StringUtils.stripControlCodes(s).trim()).collect(Collectors.toList());
+        return getScoreboardLines().stream()
+                .map(s -> net.minecraft.util.StringUtils.stripControlCodes(s).trim())
+                .collect(Collectors.toList());
     }
 
     public static boolean isOnSkyblock() {
         return getCurrentLocation() != Location.NONE;
+    }
+
+    public static boolean isSkyblock() {
+        return currentGamemode != null && currentGamemode.isSkyblock();
     }
 
     public static boolean isInDungeon() {
@@ -82,8 +142,52 @@ public final class SkyblockData {
         return getCleanScoreboardLines().stream().anyMatch(line -> line.contains("The Mist"));
     }
 
+    public static void resetSlayerData() {
+        setSlayerLevel(0);
+        setSlayerXp(0);
+        setNextLevelXp(0);
+        setXpToNextLevel(0);
+        setSessionBosses(0);
+        setRNGesusMeter(0);
+        setTotalSeconds(0);
+    }
+
+    // ==========================================
+    // ENUMS
+    // ==========================================
+
+    public enum Season {
+        NONE,
+        SPRING,
+        SUMMER,
+        AUTUMN,
+        WINTER;
+
+        public static Season getByName(String name) {
+            for (Season season : Season.values()) {
+                if (season.name().equals(name.toUpperCase())) {
+                    return season;
+                }
+            }
+            return NONE;
+        }
+    }
+
     public enum Location {
-        HUB("skyblock-", "skyblock_sandbox-", "skyblocktest-"), DUNGEON("sbdungeon-", "sbdungeon_sandbox-", "sbdungeon_test-"), DWARVEN("sbm-", "sbm_sandbox-", "sbm_test-"), CRYSTAL_HOLLOWS("sbch-", "sbch_sandbox-", "sbtest_alpha-"), CRIMSON_ISLE("sbcris-", "sbcris_sandbox-", "sbcris_test-"), PRIVATE_ISLAND("sbi-", "sbi_sandbox-", "sbi_test-"), DUNGEON_HUB("sbdh-", "sbdh_sandbox-", "sbdh_test-"), BARN("sbfarms-", "sbfarms_sandbox-", "sbfarms_test-"), PARK("sbpark-", "sbpark_sandbox-", "sbpark_test-"), SPIDERS_DEN("sbspiders-", "sbspiders_sandbox-", "sbspiders_test-"), THE_END("sbend-", "sbend_sandbox-", "sbend_test-"), JERRY("sbj-", "sbj_sandbox-", "sbj_test-"), GOLD_MINE("sbmines-", "sbmines_sandbox-", "sbmines_test-"), NONE("", "", "");
+        HUB("skyblock-", "skyblock_sandbox-", "skyblocktest-"),
+        DUNGEON("sbdungeon-", "sbdungeon_sandbox-", "sbdungeon_test-"),
+        DWARVEN("sbm-", "sbm_sandbox-", "sbm_test-"),
+        CRYSTAL_HOLLOWS("sbch-", "sbch_sandbox-", "sbtest_alpha-"),
+        CRIMSON_ISLE("sbcris-", "sbcris_sandbox-", "sbcris_test-"),
+        PRIVATE_ISLAND("sbi-", "sbi_sandbox-", "sbi_test-"),
+        DUNGEON_HUB("sbdh-", "sbdh_sandbox-", "sbdh_test-"),
+        BARN("sbfarms-", "sbfarms_sandbox-", "sbfarms_test-"),
+        PARK("sbpark-", "sbpark_sandbox-", "sbpark_test-"),
+        SPIDERS_DEN("sbspiders-", "sbspiders_sandbox-", "sbspiders_test-"),
+        THE_END("sbend-", "sbend_sandbox-", "sbend_test-"),
+        JERRY("sbj-", "sbj_sandbox-", "sbj_test-"),
+        GOLD_MINE("sbmines-", "sbmines_sandbox-", "sbmines_test-"),
+        NONE("", "", "");
 
         public final String main, sandbox, alpha;
 

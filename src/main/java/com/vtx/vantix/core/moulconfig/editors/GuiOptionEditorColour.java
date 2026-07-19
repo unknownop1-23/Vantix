@@ -5,6 +5,7 @@ package com.vtx.vantix.core.moulconfig.editors;
 
 import com.vtx.vantix.core.moulconfig.gui.GuiElementColour;
 import com.vtx.vantix.core.moulconfig.gui.config.ConfigProcessor;
+import com.vtx.vantix.utils.ColorUtils;
 import com.vtx.vantix.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -27,7 +28,7 @@ public class GuiOptionEditorColour extends GuiOptionEditor {
         super.render(x, y, width);
         int height = getHeight();
 
-        int argb = ChromaColour.specialToChromaRGB(chromaColour);
+        int argb = ColorUtils.specialToChromaRGB(chromaColour);
         int r = (argb >> 16) & 0xFF;
         int g = (argb >> 8) & 0xFF;
         int b = argb & 0xFF;

@@ -87,11 +87,15 @@ dependencies {
     // Kotlin standard library, must be shadowed into the JAR
     shadowImpl(kotlin("stdlib"))
 
+    // Add the reflections library here
+    shadowImpl("org.reflections:reflections:0.10.2")
+
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     runtimeOnly("me.djtheredstoner:DevAuth-forge-legacy:1.2.1")
     shadowImpl("com.google.code.gson:gson:2.10.1") { isTransitive = false }
 }
+
 
 // Tasks:
 

@@ -4,6 +4,7 @@ import com.vtx.vantix.command.Command;
 import com.vtx.vantix.core.moulconfig.editors.GuiPositionEditor;
 import com.vtx.vantix.core.moulconfig.gui.GuiScreenElementWrapper;
 import com.vtx.vantix.core.moulconfig.gui.config.ConfigEditor;
+import com.vtx.vantix.data.AccessoriesData;
 import com.vtx.vantix.features.chat.chatfilters.ui.ChatFilterGUI;
 import com.vtx.vantix.features.diana.GuiDianaOverlayEditor;
 import com.vtx.vantix.features.dungeons.DungeonStats;
@@ -69,6 +70,7 @@ public class VNTXConfig {
         return Keyboard.isKeyDown(keyCode);
     }
 
+
     public static void register() {
         if (registered) return;
         init();
@@ -112,6 +114,8 @@ public class VNTXConfig {
         RepoHandler.refresh(VNTXRepo.KEY_PLAYERSIZES);
         RepoHandler.refresh(VNTXRepo.KEY_UPDATE);
         RepoHandler.refresh(VNTXRepo.KEY_TAGS);
+        RepoHandler.refresh(VNTXRepo.KEY_ACCESSORIES);
+        com.vtx.vantix.data.AccessoriesData.INSTANCE.loadData();
     }
 
     public static void openGui() {
